@@ -29,6 +29,13 @@ Or install it yourself as:
 renchin tlapse  -i MOVIE_FILE_PATH -o OUTPUT_MOVIE_FILE_PATH
 ```
 
+#### Options
+
+- -output_fps/-ofps
+  - set output movie fps(default: 30)
+- -img_ext/-iex
+  - set temporary image file extension(default: png)
+
 example)
 
 ```
@@ -55,7 +62,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/renchin.
+Bug reports and pull requests are welcome on GitHub at https://github.com/YuheiNakasaka/renchin.
 
 
 ## License
