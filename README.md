@@ -31,9 +31,9 @@ renchin tlapse  -i MOVIE_FILE_PATH -o OUTPUT_MOVIE_FILE_PATH
 
 #### Options
 
-- -output_fps/-ofps
+- --ofps
   - set output movie fps(default: 30)
-- -img_ext/-iex
+- --iex
   - set temporary image file extension(default: png)
 
 example)
@@ -47,6 +47,11 @@ renchin tlapse  -i /tmp/example.mp4 -o /tmp/renchin_output_tlapse.mp4
 ```
 renchin sprite  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH
 ```
+
+#### Options
+
+- --cfps
+  - captured frame per second
 
 example)
 
@@ -67,6 +72,20 @@ renchin reverse  -i /tmp/example.mp4 -o /tmp/renchin_output_reverse.mp4 -s 0 -e 
 ```
 
 The example, output movie starts from 40 second and finishes to 0 second.
+
+### cinemagraph
+
+create cinemagraph gif from gif animation
+
+```
+renchin cgraph -i GIF_FILE -o OUTPUT_GIF_FILE -x ANIMATED_POSITION_X -y ANIMATED_POSITION_Y -w ANIMATED_PART_WIDTH -h ANIMATED_PART_HEIGHT
+```
+
+example)
+
+```
+renchin  cgraph  -i /tmp/example.gif  -o /tmp/output_gif_file.gif -x 250 -y 100 -w 50 -h 100
+```
 
 ## Development
 
