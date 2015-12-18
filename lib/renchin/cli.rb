@@ -1,6 +1,7 @@
 require "renchin"
 require "thor"
 require "renchin/file_processor"
+require "open3"
 
 module Renchin
   class CLI < Thor
@@ -11,19 +12,26 @@ module Renchin
     method_option :output, aliases: "o", desc: "Output result file name"
     method_option :ofps, default: '30', desc: "Set output movie fps"
     method_option :iex, default: 'png', desc: "frame image extension"
+    method_option :debug, default: 0, desc: "Print stdout"
     def tlapse
       movie_file = options[:input]
       result_file = options[:output]
       output_fps = options[:ofps]
       ext = options[:iex]
+      debug = options[:debug].to_i
 
       image_directory_path = image_directory(__method__)
       Dir.chdir("#{image_directory_path}")
 
       # Split a movie to png images.
-      system("ffmpeg -i #{movie_file} -f image2 #{image_directory_path}/%7d.#{ext}")
+      o1, e1, i1 = Open3.capture3("ffmpeg -i #{movie_file} -f image2 #{image_directory_path}/%7d.#{ext}")
       # Generate timelapse movie from frame images.
-      system("ffmpeg -f image2 -r #{frame_per_second(ext)} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
+      o2, e2, i2 = Open3.capture3("ffmpeg -f image2 -r #{frame_per_second(ext)} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
+
+      if debug == 1
+        puts e1
+        puts e2
+      end
 
       delete_directory(image_directory_path, "\.#{ext}")
       say("Renchin generated timelapse! ~> #{result_file}", :green)

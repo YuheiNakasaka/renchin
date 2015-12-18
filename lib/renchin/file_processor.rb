@@ -1,3 +1,4 @@
+require 'fileutils'
 module Renchin
   module FileProcessor
     # create temporary directory for frame images
@@ -14,5 +15,20 @@ module Renchin
       end
       Dir::rmdir(image_directory_path)
     end
+
+    def exists?(filename)
+      File.exist?(filename)
+    end
+
+    def init_file(filename)
+      unless File.exist?(filename)
+        dir = File.dirname(filename)
+        unless File.exist?(dir)
+          FileUtils.mkdir_p(dir)
+        end
+      end
+      true
+    end
+
   end
 end
