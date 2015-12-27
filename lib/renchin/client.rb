@@ -45,7 +45,7 @@ module Renchin
 
       o1, e1, i1 = Open3.capture3("ffmpeg -i #{movie_file} -r #{captured_frame_per_sec} -s qvga -f image2 #{image_directory_path}/renchin-original-%3d.png")
       o2, e2, i2 = Open3.capture3("convert #{image_directory_path}/renchin-original-*.png -quality 30 #{image_directory_path}/renchin-converted-%03d.jpg")
-      o3, e3, i3 = Open3.capture3("convert #{image_directory_path}/renchin-converted-*.jpg -append #{result_file}")
+      o3, e3, i3 = Open3.capture3("convert #{image_directory_path}/renchin-converted-*.jpg -append #{result_file}") # if overwrite, use mogrify
 
       if debug == 1
         puts e1
@@ -54,6 +54,30 @@ module Renchin
       end
 
       delete_directory(image_directory_path, "\.(jpg|png)")
+      result_file
+    end
+
+    def reverse(input, output, start=0, _end=10, debug=0, force="")
+      movie_file = input
+      result_file = output
+      start_sec = start
+      end_sec = _end
+
+      # validate params
+      return false unless exists?(movie_file)
+      # create dir for output file
+      init_file(result_file)
+
+      image_directory_path = image_directory(__method__)
+      Dir.chdir("#{image_directory_path}")
+
+      o1, e1, i1 = Open3.capture3("ffmpeg #{force} -i #{movie_file} -vf trim=#{start_sec}:#{end_sec},reverse,setpts=PTS-STARTPTS  -an #{result_file}")
+
+      if debug == 1
+        puts e1
+      end
+
+      Dir::rmdir(image_directory_path)
       result_file
     end
 

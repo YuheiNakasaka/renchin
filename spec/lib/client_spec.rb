@@ -73,4 +73,38 @@ describe "Renchin::Client" do
     end
 
   end
+
+  context "reverse" do
+    subject(:renchin) { Renchin::Client.new }
+
+    before do
+      output = "/tmp/output.mp4"
+      if File.exist?(output)
+        File.delete(output)
+      end
+    end
+
+    it "return generated file path" do
+      res = renchin.reverse( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.mp4")
+      expect(res).to eq('/tmp/output.mp4')
+    end
+
+    it "return false if input file is not existed" do
+      res = renchin.reverse( fixture_file("not.mp4") , "/tmp/output.mp4")
+      expect(res).to eq(false)
+    end
+
+    it "return stdout if set debug options to 1" do
+       expect {renchin.reverse( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.mp4", 0, 10, 1)}.to output.to_stdout
+    end
+
+    it "generate expected movie file if set start and end" do
+      res = renchin.reverse( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.mp4", 5, 10, 0, '-y')
+      o,e,i = Open3.capture3("ffmpeg -i #{res}")
+      matched = e.match(/Duration:\s(\d+):(\d+):(\d+)/)
+      expect(matched[3]).to eq('04') # Duration: 00:00:04:99
+    end
+
+  end
+
 end
