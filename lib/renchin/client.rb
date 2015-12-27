@@ -2,14 +2,21 @@ require "open3"
 module Renchin
   class Client
     include Renchin::FileProcessor
-    def tlapse(input, output, ofps=nil, iex='png', debug=0, force='')
+    def tlapse(input, output, options={})
+      # validate params
+      return false unless exists?(input)
+
+      opts = {
+        ofps: nil,
+        iex: 'png',
+        debug: 0,
+        force: ''
+      }.merge(options)
       movie_file = input
       result_file = output
-      output_fps = ofps || frame_per_second(60)
-      ext = iex
+      output_fps = opts[:ofps] || frame_per_second(60)
+      ext = opts[:iex]
 
-      # validate params
-      return false unless exists?(movie_file)
       # create dir for output file
       init_file(result_file)
 
@@ -19,24 +26,28 @@ module Renchin
       # Split a movie to png images.
       o1, e1, i1 = Open3.capture3("ffmpeg -i #{movie_file} -f image2 #{image_directory_path}/%7d.#{ext}")
       # Generate timelapse movie from frame images.
-      o2, e2, i2 = Open3.capture3("ffmpeg #{force} -f image2 -r #{output_fps} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
+      o2, e2, i2 = Open3.capture3("ffmpeg #{opts[:force]} -f image2 -r #{output_fps} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
 
-      if debug == 1
-        puts e1
-        puts e2
+      if opts[:debug] == 1
+        puts e1, e2
       end
 
       delete_directory(image_directory_path, "\.#{ext}")
       result_file
     end
 
-    def sprite(input, output, cfps=2, debug=0)
+    def sprite(input, output, options={})
+      # validate params
+      return false unless exists?(input)
+
+      opts = {
+        cfps: 2,
+        debug: 0
+      }.merge(options)
       movie_file = input
       result_file = output
-      captured_frame_per_sec = cfps
+      captured_frame_per_sec = opts[:cfps]
 
-      # validate params
-      return false unless exists?(movie_file)
       # create dir for output file
       init_file(result_file)
 
@@ -47,33 +58,38 @@ module Renchin
       o2, e2, i2 = Open3.capture3("convert #{image_directory_path}/renchin-original-*.png -quality 30 #{image_directory_path}/renchin-converted-%03d.jpg")
       o3, e3, i3 = Open3.capture3("convert #{image_directory_path}/renchin-converted-*.jpg -append #{result_file}") # if overwrite, use mogrify
 
-      if debug == 1
-        puts e1
-        puts e2
-        puts e3
+      if opts[:debug] == 1
+        puts e1, e2, e3
       end
 
       delete_directory(image_directory_path, "\.(jpg|png)")
       result_file
     end
 
-    def reverse(input, output, start=0, _end=10, debug=0, force="")
+    def reverse(input, output, options={})
+      # validate params
+      return false unless exists?(input)
+
+      opts = {
+        start: 0,
+        _end: 0,
+        debug: 0,
+        force: ""
+      }.merge(options)
       movie_file = input
       result_file = output
-      start_sec = start
-      end_sec = _end
+      start_sec = opts[:start]
+      end_sec = opts[:_end]
 
-      # validate params
-      return false unless exists?(movie_file)
       # create dir for output file
       init_file(result_file)
 
       image_directory_path = image_directory(__method__)
       Dir.chdir("#{image_directory_path}")
 
-      o1, e1, i1 = Open3.capture3("ffmpeg #{force} -i #{movie_file} -vf trim=#{start_sec}:#{end_sec},reverse,setpts=PTS-STARTPTS  -an #{result_file}")
+      o1, e1, i1 = Open3.capture3("ffmpeg #{opts[:force]} -i #{movie_file} -vf trim=#{start_sec}:#{end_sec},reverse,setpts=PTS-STARTPTS  -an #{result_file}")
 
-      if debug == 1
+      if opts[:debug] == 1
         puts e1
       end
 
