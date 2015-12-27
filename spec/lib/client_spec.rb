@@ -47,4 +47,30 @@ describe "Renchin::Client" do
     end
 
   end
+
+  context "sprite" do
+    subject(:renchin) { Renchin::Client.new }
+
+    before do
+      output = "/tmp/output.jpg"
+      if File.exist?(output)
+        File.delete(output)
+      end
+    end
+
+    it "return generated file path" do
+      res = renchin.sprite( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.jpg")
+      expect(res).to eq('/tmp/output.jpg')
+    end
+
+    it "return false if input file is not existed" do
+      res = renchin.sprite( fixture_file("not.mp4") , "/tmp/output.jpg")
+      expect(res).to eq(false)
+    end
+
+    it "return stdout if set debug options to 1" do
+       expect {renchin.sprite( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.jpg", 2, 1)}.to output.to_stdout
+    end
+
+  end
 end
