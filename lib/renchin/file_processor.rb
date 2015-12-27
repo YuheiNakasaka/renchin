@@ -1,3 +1,4 @@
+require 'fileutils'
 module Renchin
   module FileProcessor
     # create temporary directory for frame images
@@ -9,10 +10,27 @@ module Renchin
 
     # delete all files in directory
     def delete_directory(image_directory_path,expr)
-      Dir::foreach(image_directory_path) do |file|
-        File.delete(image_directory_path + '/' + file) if (/#{expr}$/ =~ file)
+      if exists?(image_directory_path)
+        Dir::foreach(image_directory_path) do |file|
+          File.delete(image_directory_path + '/' + file) if (/#{expr}$/ =~ file)
+        end
+        Dir::rmdir(image_directory_path)
       end
-      Dir::rmdir(image_directory_path)
     end
+
+    def exists?(filename)
+      File.exist?(filename)
+    end
+
+    def init_file(filename)
+      unless File.exist?(filename)
+        dir = File.dirname(filename)
+        unless File.exist?(dir)
+          FileUtils.mkdir_p(dir)
+        end
+      end
+      true
+    end
+
   end
 end
