@@ -90,9 +90,9 @@ renchin.reverse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4", {start: 0, end
 
 #### Options
 
-- --start
+- start
   - start time
-- --_end
+- _end
   - end time
 
 ### CLI
@@ -122,17 +122,17 @@ renchin.cgraph( "/tmp/zOx3LRvtz22XIfhE.gif" , "/tmp/output.gif", {overlay_x: 320
 
 #### Options
 
-- --overlay_x
+- overlay_x
   - animated part x
-- --overlay_y
+- overlay_y
   - animated part y
-- --overlay_w
+- overlay_w
   - animated part width
-- --overlay_h
+- overlay_h
   - animated part height
-- --viewport_w
+- viewport_w
   - final output width
-- --viewport_h
+- viewport_h
   - final output height
 
 ### CLI
