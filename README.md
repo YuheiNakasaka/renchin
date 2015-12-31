@@ -1,6 +1,6 @@
 # Renchin
 
-Renchin is a convinient cli wrapper to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick and ffmpeg.
+Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick and ffmpeg.
 
 ## Requirements
 
@@ -23,6 +23,15 @@ Or install it yourself as:
 
 ## Usage
 
+### Options
+
+- command_path
+  - set command line path
+```
+Renchin.options[:command_path] = '/usr/bin'
+
+```
+
 ### Timelapse
 
 ![timelapse](http://img.gifmagazine.net/gifmagazine/images/693433/original.gif)
@@ -32,7 +41,7 @@ renchin = Renchin.new
 renchin.tlapse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4")
 ```
 
-### CLI
+#### CLI
 
 ```
 renchin tlapse  -i MOVIE_FILE_PATH -o OUTPUT_MOVIE_FILE_PATH
@@ -62,7 +71,7 @@ renchin = Renchin.new
 renchin.sprite( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.jpg")
 ```
 
-### CLI
+#### CLI
 
 ```
 renchin sprite  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH
@@ -95,7 +104,7 @@ renchin.reverse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4", {start: 0, end
 - _end
   - end time
 
-### CLI
+#### CLI
 
 ```
 renchin reverse  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH -s START_TIME -e END_TIME
@@ -135,7 +144,7 @@ renchin.cgraph( "/tmp/zOx3LRvtz22XIfhE.gif" , "/tmp/output.gif", {overlay_x: 320
 - viewport_h
   - final output height
 
-### CLI
+#### CLI
 
 ```
 renchin cgraph -i GIF_FILE -o OUTPUT_GIF_FILE -x ANIMATED_POSITION_X -y ANIMATED_POSITION_Y -w ANIMATED_PART_WIDTH -h ANIMATED_PART_HEIGHT

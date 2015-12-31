@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["YuheiNakasaka"]
   spec.email         = ["yuhei.nakasaka@gmail.com"]
 
-  spec.summary       = %q{Renchin is a convinient cli wrapper to convert movie to image/movie/gif or convert image to image/movie/gif}
-  spec.description   = %q{Renchin is a convinient cli wrapper to convert movie to image/movie/gif or convert image to image/movie/gif}
+  spec.summary       = %q{Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif}
+  spec.description   = %q{Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif}
   spec.homepage      = ""
   spec.license       = "MIT"
 
