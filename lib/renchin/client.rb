@@ -12,6 +12,7 @@ module Renchin
         debug: 0,
         force: ''
       }.merge(options)
+      command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
       movie_file = input
       result_file = output
       output_fps = opts[:ofps] || frame_per_second(60)
@@ -24,9 +25,9 @@ module Renchin
       Dir.chdir("#{image_directory_path}")
 
       # Split a movie to png images.
-      o1, e1, i1 = Open3.capture3("ffmpeg -i #{movie_file} -f image2 #{image_directory_path}/%7d.#{ext}")
+      o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg -i #{movie_file} -f image2 #{image_directory_path}/%7d.#{ext}")
       # Generate timelapse movie from frame images.
-      o2, e2, i2 = Open3.capture3("ffmpeg #{opts[:force]} -f image2 -r #{output_fps} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
+      o2, e2, i2 = Open3.capture3("#{command_path}ffmpeg #{opts[:force]} -f image2 -r #{output_fps} -i #{image_directory_path}/%7d.#{ext} -r #{output_fps} -an -vcodec libx264 -pix_fmt yuv420p #{result_file}")
 
       if opts[:debug] == 1
         puts e1, e2
@@ -44,6 +45,7 @@ module Renchin
         cfps: 2,
         debug: 0
       }.merge(options)
+      command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
       movie_file = input
       result_file = output
       captured_frame_per_sec = opts[:cfps]
@@ -54,9 +56,9 @@ module Renchin
       image_directory_path = image_directory(__method__)
       Dir.chdir("#{image_directory_path}")
 
-      o1, e1, i1 = Open3.capture3("ffmpeg -i #{movie_file} -r #{captured_frame_per_sec} -s qvga -f image2 #{image_directory_path}/renchin-original-%3d.png")
-      o2, e2, i2 = Open3.capture3("convert #{image_directory_path}/renchin-original-*.png -quality 30 #{image_directory_path}/renchin-converted-%03d.jpg")
-      o3, e3, i3 = Open3.capture3("convert #{image_directory_path}/renchin-converted-*.jpg -append #{result_file}") # if overwrite, use mogrify
+      o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg -i #{movie_file} -r #{captured_frame_per_sec} -s qvga -f image2 #{image_directory_path}/renchin-original-%3d.png")
+      o2, e2, i2 = Open3.capture3("#{command_path}convert #{image_directory_path}/renchin-original-*.png -quality 30 #{image_directory_path}/renchin-converted-%03d.jpg")
+      o3, e3, i3 = Open3.capture3("#{command_path}convert #{image_directory_path}/renchin-converted-*.jpg -append #{result_file}") # if overwrite, use mogrify
 
       if opts[:debug] == 1
         puts e1, e2, e3
@@ -76,6 +78,7 @@ module Renchin
         debug: 0,
         force: ""
       }.merge(options)
+      command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
       movie_file = input
       result_file = output
       start_sec = opts[:start]
@@ -87,7 +90,7 @@ module Renchin
       image_directory_path = image_directory(__method__)
       Dir.chdir("#{image_directory_path}")
 
-      o1, e1, i1 = Open3.capture3("ffmpeg #{opts[:force]} -i #{movie_file} -vf trim=#{start_sec}:#{end_sec},reverse,setpts=PTS-STARTPTS  -an #{result_file}")
+      o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg #{opts[:force]} -i #{movie_file} -vf trim=#{start_sec}:#{end_sec},reverse,setpts=PTS-STARTPTS  -an #{result_file}")
 
       if opts[:debug] == 1
         puts e1
@@ -116,6 +119,7 @@ module Renchin
         viewport_y: 0,
         debug: 0
       }.merge(options)
+      command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
       gif_file = input
       result_file = output
       gif_configs = (`identify #{gif_file}`).split("\n")
@@ -141,17 +145,17 @@ module Renchin
       Dir.chdir("#{image_directory_path}")
 
       # movie_to_frame
-      o1, e1, i1 = Open3.capture3("convert #{gif_file}[#{frame_bg}] #{image_directory_path}/bg.png")
-      o2, e2, i2 = Open3.capture3("convert #{gif_file} -repage 0x0 -crop #{overlay_w}x#{overlay_h}+#{overlay_x}+#{overlay_y} +repage #{image_directory_path}/frame.png")
+      o1, e1, i1 = Open3.capture3("#{command_path}convert #{gif_file}[#{frame_bg}] #{image_directory_path}/bg.png")
+      o2, e2, i2 = Open3.capture3("#{command_path}convert #{gif_file} -repage 0x0 -crop #{overlay_w}x#{overlay_h}+#{overlay_x}+#{overlay_y} +repage #{image_directory_path}/frame.png")
 
       # frames_to_gif && iterate_frames
       frame_stop = (`identify #{gif_file} | wc -l`).chomp.gsub(/\s/,'').to_i
       for i in frame_start...frame_stop do
         frames = "#{frames} -delay #{speed_current} #{image_directory_path}/frame-out-#{offset}.png"
-        o3, e3, i3 = Open3.capture3("convert #{image_directory_path}/bg.png #{image_directory_path}/frame-#{i}.png -geometry +#{overlay_x}+#{overlay_y} -compose over -composite #{image_directory_path}/frame-out-#{offset}.png")
+        o3, e3, i3 = Open3.capture3("#{command_path}convert #{image_directory_path}/bg.png #{image_directory_path}/frame-#{i}.png -geometry +#{overlay_x}+#{overlay_y} -compose over -composite #{image_directory_path}/frame-out-#{offset}.png")
         offset += 1
       end
-      o4, e4, i4 = Open3.capture3("convert #{frames} -loop 0 -crop #{viewport_w}x#{viewport_h}+#{viewport_x}+#{viewport_y} -layers Optimize #{result_file}")
+      o4, e4, i4 = Open3.capture3("#{command_path}convert #{frames} -loop 0 -crop #{viewport_w}x#{viewport_h}+#{viewport_x}+#{viewport_y} -layers Optimize #{result_file}")
 
       if opts[:debug] == 1
         puts e1, e2, e3, e4

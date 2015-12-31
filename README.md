@@ -1,11 +1,18 @@
 # Renchin
 
-Renchin is a convinient cli wrapper to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick and ffmpeg.
+Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick and ffmpeg.
 
 ## Requirements
 
+### Ruby
+
+Renchin is tested in Ruby version >= 2.0.0
+
+### Image Processor
 - FFmpeg
 - Imagemagick
+
+In default, Renchin use $PATH.
 
 ## Installation
 
@@ -23,6 +30,17 @@ Or install it yourself as:
 
 ## Usage
 
+Each methods have client version and cli version.
+
+### Options
+
+- command_path
+  - set command line path
+```
+Renchin.options[:command_path] = '/usr/bin'
+
+```
+
 ### Timelapse
 
 ![timelapse](http://img.gifmagazine.net/gifmagazine/images/693433/original.gif)
@@ -32,13 +50,13 @@ renchin = Renchin.new
 renchin.tlapse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4")
 ```
 
-### CLI
+#### CLI
 
 ```
 renchin tlapse  -i MOVIE_FILE_PATH -o OUTPUT_MOVIE_FILE_PATH
 ```
 
-#### Options
+Options
 
 - --ofps
   - set output movie fps(default: 30)
@@ -62,13 +80,13 @@ renchin = Renchin.new
 renchin.sprite( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.jpg")
 ```
 
-### CLI
+#### CLI
 
 ```
 renchin sprite  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH
 ```
 
-#### Options
+Options
 
 - --cfps
   - captured frame per second
@@ -90,12 +108,12 @@ renchin.reverse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4", {start: 0, end
 
 #### Options
 
-- --start
+- start
   - start time
-- --_end
+- _end
   - end time
 
-### CLI
+#### CLI
 
 ```
 renchin reverse  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH -s START_TIME -e END_TIME
@@ -122,20 +140,20 @@ renchin.cgraph( "/tmp/zOx3LRvtz22XIfhE.gif" , "/tmp/output.gif", {overlay_x: 320
 
 #### Options
 
-- --overlay_x
+- overlay_x
   - animated part x
-- --overlay_y
+- overlay_y
   - animated part y
-- --overlay_w
+- overlay_w
   - animated part width
-- --overlay_h
+- overlay_h
   - animated part height
-- --viewport_w
+- viewport_w
   - final output width
-- --viewport_h
+- viewport_h
   - final output height
 
-### CLI
+#### CLI
 
 ```
 renchin cgraph -i GIF_FILE -o OUTPUT_GIF_FILE -x ANIMATED_POSITION_X -y ANIMATED_POSITION_Y -w ANIMATED_PART_WIDTH -h ANIMATED_PART_HEIGHT
