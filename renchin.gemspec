@@ -11,16 +11,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif}
   spec.description   = %q{Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/YuheiNakasaka/renchin"
   spec.license       = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
-  # delete this section to allow pushing this gem to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
-  end
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"

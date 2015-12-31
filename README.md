@@ -4,8 +4,15 @@ Renchin is a convinient cli wrapper library to convert movie to image/movie/gif 
 
 ## Requirements
 
+### Ruby
+
+Renchin is tested in Ruby version >= 2.0.0
+
+### Image Processor
 - FFmpeg
 - Imagemagick
+
+In default, Renchin use $PATH.
 
 ## Installation
 
@@ -22,6 +29,8 @@ Or install it yourself as:
     $ gem install renchin
 
 ## Usage
+
+Each methods have client version and cli version.
 
 ### Options
 
@@ -47,7 +56,7 @@ renchin.tlapse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4")
 renchin tlapse  -i MOVIE_FILE_PATH -o OUTPUT_MOVIE_FILE_PATH
 ```
 
-#### Options
+Options
 
 - --ofps
   - set output movie fps(default: 30)
@@ -77,7 +86,7 @@ renchin.sprite( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.jpg")
 renchin sprite  -i MOVIE_FILE_PATH -o OUTPUT_FILE_PATH
 ```
 
-#### Options
+Options
 
 - --cfps
   - captured frame per second
