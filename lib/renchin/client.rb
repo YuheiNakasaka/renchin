@@ -165,6 +165,34 @@ module Renchin
       result_file
     end
 
+    def movie_to_gif(input, output, options={})
+      # validate params
+      return false unless exists?(input)
+
+      opts = {
+        debug: 0,
+        force: ""
+      }.merge(options)
+      command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
+      movie_file = input
+      result_file = output.sub(/\.\w+/,'.gif')
+
+      # create dir for output file
+      init_file(result_file)
+
+      image_directory_path = image_directory(__method__)
+      Dir.chdir("#{image_directory_path}")
+
+      o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg #{opts[:force]} -i #{movie_file}  -an -r 15  -pix_fmt rgb24 -f gif #{result_file}")
+
+      if opts[:debug] == 1
+        puts e1
+      end
+
+      Dir::rmdir(image_directory_path)
+      result_file
+    end
+
     private
     def frame_count(expr)
       Dir.glob(expr).count

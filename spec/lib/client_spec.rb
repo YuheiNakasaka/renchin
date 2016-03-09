@@ -163,4 +163,25 @@ describe "Renchin::Client" do
 
   end
 
+  context "movie_to_gif", focus: true do
+    subject(:renchin) { Renchin::Client.new }
+
+    before do
+      output = "/tmp/output.gif"
+      if File.exist?(output)
+        File.delete(output)
+      end
+      @options = {
+        debug: 0,
+        force: ""
+      }
+    end
+
+    it "return generated file path" do
+      res = renchin.movie_to_gif( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.gif", @options)
+      p res
+      expect(res).to eq('/tmp/output.gif')
+    end
+  end
+
 end
