@@ -171,7 +171,8 @@ module Renchin
 
       opts = {
         debug: 0,
-        force: ""
+        force: "",
+        quality: ''
       }.merge(options)
       command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
       movie_file = input
@@ -183,8 +184,12 @@ module Renchin
       image_directory_path = image_directory(__method__)
       Dir.chdir("#{image_directory_path}")
 
-      o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg -i #{movie_file} -f image2 renchin_movie_to_gif_frame_%05d.png ")
-      o2, e2, i2 = Open3.capture3("#{command_path}convert -limit memory 256MB -limit disk 2GB -delay 4.5 -loop 0 renchin_movie_to_gif_frame_*.png #{result_file}")
+      if opts[:quality] == 'low'
+        o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg #{opts[:force]} -i #{movie_file}  -an -r 15  -pix_fmt rgb24 -f gif #{result_file}")
+      else
+        o1, e1, i1 = Open3.capture3("#{command_path}ffmpeg -i #{movie_file} -f image2 renchin_movie_to_gif_frame_%05d.png ")
+        o2, e2, i2 = Open3.capture3("#{command_path}convert -limit memory 256MB -limit disk 2GB -delay 4.5 -loop 0 renchin_movie_to_gif_frame_*.png #{result_file}")
+      end
 
       if opts[:debug] == 1
         puts e1
