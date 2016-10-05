@@ -1,7 +1,10 @@
 require "open3"
+require "renchin/frame_reduction"
+
 module Renchin
   class Client
     include Renchin::FileProcessor
+
     def tlapse(input, output, options={})
       # validate params
       return false unless exists?(input)
@@ -197,6 +200,11 @@ module Renchin
 
       delete_directory(image_directory_path, "\.png")
       result_file
+    end
+
+    def frame_reduction(input, output, options={})
+      @frame_reduction = Renchin::FrameReduction.new(input, output, options)
+      @frame_reduction.run
     end
 
     private
