@@ -205,6 +205,7 @@ module Renchin
     def frame_reduction(input, output, options={})
       @frame_reduction = Renchin::FrameReduction.new(input, output, options)
       @frame_reduction.run
+      @frame_reduction.delete({del_input: false, del_output: false})
     end
 
     private
