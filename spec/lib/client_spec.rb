@@ -14,9 +14,9 @@ describe "Renchin::Client" do
     subject(:renchin) { Renchin::Client.new }
 
     before do
-      output = "/tmp/output.mp4"
-      if File.exist?(output)
-        File.delete(output)
+      @output = "/tmp/output.mp4"
+      if File.exist?(@output)
+        File.delete(@output)
       end
       @options = {
         ofps: nil,
@@ -58,15 +58,19 @@ describe "Renchin::Client" do
       expect(res).to eq('/tmp/output.mp4')
     end
 
+    after do
+      File.delete(@output) if File.exist?(@output)
+    end
+
   end
 
   context "sprite" do
     subject(:renchin) { Renchin::Client.new }
 
     before do
-      output = "/tmp/output.jpg"
-      if File.exist?(output)
-        File.delete(output)
+      @output = "/tmp/output.jpg"
+      if File.exist?(@output)
+        File.delete(@output)
       end
       @options = {
         cfps: 2,
@@ -87,6 +91,10 @@ describe "Renchin::Client" do
     it "return stdout if set debug options to 1" do
       @options[:debug] = 1
       expect {renchin.sprite( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.jpg", @options)}.to output.to_stdout
+    end
+
+    after do
+      File.delete(@output) if File.exist?(@output)
     end
 
   end
@@ -163,7 +171,7 @@ describe "Renchin::Client" do
 
   end
 
-  context "movie_to_gif", focus: true do
+  context "movie_to_gif" do
     subject(:renchin) { Renchin::Client.new }
 
     before do
@@ -179,8 +187,36 @@ describe "Renchin::Client" do
 
     it "return generated file path" do
       res = renchin.movie_to_gif( fixture_file("zOx3LRvtz22XIfhE.mp4") , "/tmp/output.gif", @options)
-      p res
       expect(res).to eq('/tmp/output.gif')
+    end
+  end
+
+  context "frame_reduction" do
+    subject(:renchin) { Renchin::Client.new }
+
+    before do
+      @output = ''
+      if File.exist?(@output)
+        File.delete(@output)
+      end
+      @options = {
+        reduction_rate: 0.3
+      }
+    end
+
+    it "return generated file path" do
+      @output = renchin.frame_reduction( fixture_file("cat_sozai.gif"), @options)
+      expect(@output).to match(%r!/tmp/renchin_frame_reduction_output_(\d+_\d+).gif!)
+    end
+
+    it "change result file path" do
+      @options[:output_path] = '/tmp/output.gif'
+      @output = renchin.frame_reduction( fixture_file("cat_sozai.gif"), @options)
+      expect(@output).to eq('/tmp/output.gif')
+    end
+
+    after do
+      File.delete(@output) if File.exist?(@output)
     end
   end
 

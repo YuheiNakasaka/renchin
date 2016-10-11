@@ -1,6 +1,6 @@
 # Renchin
 
-Renchin is a convinient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick and ffmpeg.
+Renchin is a convenient cli wrapper library to convert movie to image/movie/gif or convert image to image/movie/gif with imagemagick, ffmpeg and gifsicle.
 
 ## Requirements
 
@@ -9,8 +9,9 @@ Renchin is a convinient cli wrapper library to convert movie to image/movie/gif 
 Renchin is tested in Ruby version >= 2.0.0
 
 ### Image Processor
-- FFmpeg
-- Imagemagick
+- [FFmpeg](https://ffmpeg.org/download.html)
+- [Imagemagick](http://www.imagemagick.org/script/binary-releases.php)
+- [gifsicle](https://www.lcdf.org/gifsicle/)
 
 In default, Renchin use $PATH.
 
@@ -113,6 +114,7 @@ renchin.reverse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4", {start: 0, end
 - _end
   - end time
 
+
 #### CLI
 
 ```
@@ -131,7 +133,7 @@ The example, output movie starts from 40 second and finishes to 0 second.
 
 ![cinemagraph](http://img.gifmagazine.net/gifmagazine/images/676045/original.gif)
 
-create cinemagraph gif from gif animation
+Create cinemagraph gif from gif animation
 
 ```
 renchin = Renchin.new
@@ -163,6 +165,36 @@ example)
 
 ```
 renchin  cgraph  -i /tmp/example.gif  -o /tmp/output_gif_file.gif -x 250 -y 100 -w 50 -h 100
+```
+
+### Frame reduction
+
+Reduces gif animation frames by a given rate.
+
+```
+# If the number of frames of input.gif is 100,
+# output.gif frames are 50 because reduction_rate is 50%.
+@renchin = Renchin.new
+@renchin.frame_reduction( "input.gif", {reduction_rate: 0.5}) # /tmp/output.gif
+```
+
+- reduction_rate
+  - reduction rate of gif frames
+
+#### CLI
+
+```
+renchin frame_reduction -i GIF_FILE -r REDUCTION_RATE
+```
+
+example)
+
+```
+# return /tmp/output.gif
+$ renchin frame_reduction -i input.gif -r 0.5
+
+# make output gif to custom directory
+$ renchin frame_reduction -i input.gif -o /mydir/output.gif -r 0.5
 ```
 
 ## Development
