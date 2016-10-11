@@ -131,6 +131,21 @@ module Renchin
       say("Renchin generated sprite file! ~> #{result_file}", :green)
     end
 
+    desc "frame_reduction -i GIF_FILE -r REDUCTION_RATE", "Generate a light weight gif by reducing frames"
+    method_option :input, aliases: "-i", desc: "Input gif file path"
+    method_option :output, aliases: "-o", default: nil, desc: "Output result file"
+    method_option :rate, aliases: "-r", desc: "Reduction rate"
+    def frame_reduction
+      input_file = options[:input]
+      output_file = !options[:output].nil? ? options[:output] : nil
+      reduction_rate = options[:rate].to_f
+
+      @renchin = Renchin::Client.new
+      output_path = @renchin.frame_reduction(input_file, {reduction_rate: reduction_rate, output_path: output_file})
+
+      say("Renchin generated reverse movie! ~> #{output_path}", :green)
+    end
+
     private
     def frame_count(expr)
       Dir.glob(expr).count

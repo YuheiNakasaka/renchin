@@ -202,10 +202,11 @@ module Renchin
       result_file
     end
 
-    def frame_reduction(input, output, options={})
-      @frame_reduction = Renchin::FrameReduction.new(input, output, options)
-      @frame_reduction.run
-      @frame_reduction.delete({del_input: false, del_output: false})
+    def frame_reduction(input, options={})
+      @frame_reduction = Renchin::FrameReduction.new(input, options)
+      output_path = @frame_reduction.run
+      @frame_reduction.delete(options)
+      output_path
     end
 
     private

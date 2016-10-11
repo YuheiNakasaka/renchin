@@ -4,7 +4,7 @@ module Renchin
     def initialize(input, options)
       @opts = {
         div_count: 10,
-        div_count_rate: nil,
+        reduction_rate: nil,
         root_path: "/tmp",
         output_path: nil,
         delay: nil,
@@ -13,11 +13,11 @@ module Renchin
         threadhold_file_weight: 512000
       }.merge(options)
 
+      @unique_identifier = "#{Time.now.to_i}_#{rand(10000)}" # used as unique indetifier
       @working_directory = working_directory
       @input_path = input_path(input)
       @output_path = output_path
       @command_path = Renchin.options[:command_path].nil? ? '' : Renchin.options[:command_path]+'/'
-      @unique_identifier = "#{Time.now.to_i}_#{rand(10000)}" # used as unique indetifier
 
       # validate params
       return false unless File.exists?(@input_path)
@@ -102,7 +102,7 @@ module Renchin
         .reject{|delay| delay =~ /\n/}
         .map{|delay| delay.to_i == 0 ? 9 : delay.to_f}
         avg_delay = (delays.inject(:+) / delays.size).to_i
-        (avg_delay / @opts[:div_count_rate]).to_i
+        (avg_delay / @opts[:reduction_rate]).to_i
       else
         @opts[:delay].to_i
       end
@@ -117,7 +117,7 @@ module Renchin
       total_frame_count = get_total_frame_count
       delay = get_original_delay
 
-      div_frame_count = @opts[:div_count_rate].nil? ? @opts[:div_count] : (total_frame_count * @opts[:div_count_rate].to_f).floor
+      div_frame_count = @opts[:reduction_rate].nil? ? @opts[:div_count] : (total_frame_count * @opts[:reduction_rate].to_f).floor
       if file_weight > @opts[:threadhold_file_weight]
         # divisions to fetch gif frames
         # if total frames is more than div_count, use all frames so keep_div is 1
