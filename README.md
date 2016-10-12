@@ -47,7 +47,7 @@ Renchin.options[:command_path] = '/usr/bin'
 ![timelapse](http://img.gifmagazine.net/gifmagazine/images/693433/original.gif)
 
 ```
-renchin = Renchin.new
+renchin = Renchin::Client.new
 renchin.tlapse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4")
 ```
 
@@ -77,7 +77,7 @@ It creates a single sprite image from movie.
 The image is useful to create gif like animation with javascript in [this library](http://nbnote.github.io/flipbook/).
 
 ```
-renchin = Renchin.new
+renchin = Renchin::Client.new
 renchin.sprite( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.jpg")
 ```
 
@@ -103,7 +103,7 @@ renchin sprite  -i /tmp/example.mp4 -o /tmp/renchin_output_sprite.jpg
 ![reverse movie](http://img.gifmagazine.net/gifmagazine/images/496200/original.gif?1438912596)
 
 ```
-renchin = Renchin.new
+renchin = Renchin::Client.new
 renchin.reverse( "/tmp/zOx3LRvtz22XIfhE.mp4" , "/tmp/output.mp4", {start: 0, end_sec: 10})
 ```
 
@@ -136,7 +136,7 @@ The example, output movie starts from 40 second and finishes to 0 second.
 Create cinemagraph gif from gif animation
 
 ```
-renchin = Renchin.new
+renchin = Renchin::Client.new
 renchin.cgraph( "/tmp/zOx3LRvtz22XIfhE.gif" , "/tmp/output.gif", {overlay_x: 320, overlay_y: 150, overlay_w: 411, overlay_h: 315, viewport_w: 411, viewport_h: 315})
 ```
 
@@ -174,7 +174,7 @@ Reduces gif animation frames by a given rate.
 ```
 # If the number of frames of input.gif is 100,
 # output.gif frames are 50 because reduction_rate is 50%.
-@renchin = Renchin.new
+@renchin = Renchin::Client.new
 @renchin.frame_reduction( "input.gif", {reduction_rate: 0.5}) # /tmp/output.gif
 ```
 

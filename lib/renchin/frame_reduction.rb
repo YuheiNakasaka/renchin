@@ -3,13 +3,13 @@ module Renchin
   class FrameReduction
     def initialize(input, options)
       @opts = {
-        div_count: 10,
-        reduction_rate: nil,
+        minimum_frames: 10,
+        reduction_rate: 0.5,
         root_path: "/tmp",
         output_path: nil,
         delay: nil,
-        threadhold_width: 500,
-        threadhold_height: 500,
+        threadhold_width: 414,
+        threadhold_height: 414,
         threadhold_file_weight: 512000
       }.merge(options)
 
@@ -117,32 +117,31 @@ module Renchin
       total_frame_count = get_total_frame_count
       delay = get_original_delay
 
-      div_frame_count = @opts[:reduction_rate].nil? ? @opts[:div_count] : (total_frame_count * @opts[:reduction_rate].to_f).floor
-      if file_weight > @opts[:threadhold_file_weight]
-        # divisions to fetch gif frames
-        # if total frames is more than div_count, use all frames so keep_div is 1
-        keep_div = (total_frame_count.to_f / div_frame_count).floor
-        keep_index = keep_div
+      # if total frames is more than minimum_frames and file size is heavier than the threadhold of file size,
+      # reduce frames by reduction_rate
+      div_frame_count = @opts[:reduction_rate].nil? ? @opts[:minimum_frames] : (total_frame_count * @opts[:reduction_rate].to_f).floor
+      if file_weight > @opts[:threadhold_file_weight] && total_frame_count > @opts[:minimum_frames]
+        keep_div = total_frame_count.to_f / div_frame_count
         keep_frames = []
-        total_frame_count.times do |i|
-          if keep_index == i
-            keep_frames << keep_index
-            keep_index += keep_div
-            next
-          end
+
+        1.step(total_frame_count, keep_div) do |i|
+          keep_frames << i.floor
         end
+
+        # puts "total_frame_count: #{total_frame_count}, keep_div: #{keep_div}, div_frame_count: #{div_frame_count}, #{(total_frame_count.to_f / div_frame_count)}"
+        # puts "keep_frames: #{keep_frames.join(',')}"
 
         # extract each frames from original image
         keep_frames.each do |i|
           frame_path = "#{@working_directory}/#{@unique_identifier}_#{i}.gif"
           frame_paths << frame_path
-          o,e,s = Open3.capture3("#{@command_path}gifsicle --unoptimize #{@input_path} \"##{i}\" -o #{frame_path}")
+          o,e,s = Open3.capture3("#{@command_path}gifsicle --unoptimize -O3 --background \"#ffffff\" --transparent \"#ffffff\" --crop-transparency #{@input_path} \"##{i}\" -o #{frame_path}")
         end
 
         # create a new gif from that extracted frames
         o,e,s = Open3.capture3("#{@command_path}gifsicle --delay #{delay} #{@output_path} #{frame_paths.join(' ')} > #{@output_path}")
       else
-        # when total_frame_count is less than div_count
+        # when total_frame_count is less than minimum_frames
         # use original gif as output gif
         FileUtils.copy(@input_path, @output_path)
       end
@@ -151,7 +150,7 @@ module Renchin
     # resize and execute optimization to output gif
     def resize_output_image
       puts "Resizing output image"
-      o,e,s = Open3.capture3("#{@command_path}gifsicle -b -O2 --resize-fit #{@opts[:threadhold_width]}x#{@opts[:threadhold_height]} #{@output_path}")
+      o,e,s = Open3.capture3("#{@command_path}gifsicle -b -O3 --resize-fit #{@opts[:threadhold_width]}x#{@opts[:threadhold_height]} #{@output_path}")
     end
 
     # clean directory
