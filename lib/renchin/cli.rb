@@ -143,7 +143,7 @@ module Renchin
       @renchin = Renchin::Client.new
       output_path = @renchin.frame_reduction(input_file, {reduction_rate: reduction_rate, output_path: output_file})
 
-      say("Renchin generated reverse movie! ~> #{output_path}", :green)
+      say("Renchin generated frame reduced gif! ~> #{output_path}", :green)
     end
 
     private
