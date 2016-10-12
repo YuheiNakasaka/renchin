@@ -73,6 +73,7 @@ module Renchin
         end
       rescue
         if ret < 4
+          ret += 1
           retry
         else
           raise "Original file not downloaded"
