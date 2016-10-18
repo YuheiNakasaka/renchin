@@ -136,7 +136,7 @@ module Renchin
         keep_frames.each do |i|
           frame_path = "#{@working_directory}/#{@unique_identifier}_#{i}.gif"
           frame_paths << frame_path
-          o,e,s = Open3.capture3("#{@command_path}gifsicle --unoptimize -O3 --background \"#ffffff\" --transparent \"#ffffff\" --crop-transparency #{@input_path} \"##{i}\" -o #{frame_path}")
+          o,e,s = Open3.capture3("#{@command_path}gifsicle --unoptimize #{@input_path} \"##{i}\" -o #{frame_path}")
         end
 
         # create a new gif from that extracted frames
