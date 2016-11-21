@@ -151,7 +151,7 @@ module Renchin
     # resize and execute optimization to output gif
     def resize_output_image
       puts "Resizing output image"
-      o,e,s = Open3.capture3("#{@command_path}gifsicle -b -O3 --resize-fit #{@opts[:threadhold_width]}x#{@opts[:threadhold_height]} #{@output_path}")
+      o,e,s = Open3.capture3("#{@command_path}gifsicle -b --resize-fit #{@opts[:threadhold_width]}x#{@opts[:threadhold_height]} #{@output_path}")
     end
 
     # clean directory
